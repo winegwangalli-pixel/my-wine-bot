@@ -101,13 +101,13 @@ if st.button("🍷 나만의 와인 추천받기", use_container_width=True):
         # [스마트 전략 2] 가격대 1차 필터링 (AI의 부하를 줄여 답변 품질 상승)
         filtered_df = shuffled_df
         if "3만원 이하" in price_option:
-            filtered_df = shuffled_df[shuffled_df['공급가'] <= 30000]
+            filtered_df = shuffled_df[shuffled_df['가격'] <= 30000]
         elif "3~7만원" in price_option:
-            filtered_df = shuffled_df[(shuffled_df['공급가'] > 30000) & (shuffled_df['공급가'] <= 70000)]
+            filtered_df = shuffled_df[(shuffled_df['가격'] > 30000) & (shuffled_df['가격'] <= 70000)]
         elif "7~15만원" in price_option:
-            filtered_df = shuffled_df[(shuffled_df['공급가'] > 70000) & (shuffled_df['공급가'] <= 150000)]
+            filtered_df = shuffled_df[(shuffled_df['가격'] > 70000) & (shuffled_df['가격'] <= 150000)]
         elif "15만원 이상" in price_option:
-            filtered_df = shuffled_df[shuffled_df['공급가'] > 150000]
+            filtered_df = shuffled_df[shuffled_df['가격'] > 150000]
 
         # 1차 필터링 후 최대 100개만 AI에게 전달 (ResourceExhausted 에러 방지)
         inventory_sample = filtered_df.head(100).to_string(index=False)
