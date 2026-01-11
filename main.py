@@ -30,10 +30,10 @@ except Exception as e:
 model = genai.GenerativeModel("gemini-2.0-flash-exp")
 
 # 4. 앱 UI 구성
-st.title("🍷 우리 매장 AI 소믈리에")
-st.write("찾으시는 와인이나 어울리는 안주를 물어보세요!")
+st.title("🍷 와인곳간 AI 소믈리에 ")
+st.write("찾으시는 와인이나 어울리는 안주를 물어보세요! 구체적으로 물어보시면 더 좋아요:)")
 
-query = st.text_input("질문을 입력하세요 (예: 3만원대 레드와인 추천해줘)", "")
+query = st.text_input("질문을 입력하세요 (예: 3만원대 삼겹살이랑 먹을 레드와인 추천해줘)", "")
 
 if query:
     with st.spinner("재고를 확인하고 추천 리스트를 만들고 있습니다..."):
@@ -41,7 +41,7 @@ if query:
         inventory_str = df.to_string(index=False)
         
         # 사장님이 원하신 정돈된 답변 구성
-        prompt = f"""너는 와인 매장의 전문 소믈리에야. 아래 [매장 재고 데이터]를 바탕으로 질문에 답해줘.
+        prompt = f"""너는 20년 경력의 마스터 소믈리에이자, 와인과 음식의 조화를 연구하는 미식 전문가야. 아래 [매장 재고 데이터]를 바탕으로 질문에 답해줘.
             
 [매장 재고 데이터]
 {inventory_str}
