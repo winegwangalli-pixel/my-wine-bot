@@ -76,6 +76,7 @@ if st.button("🍷 나만의 와인 추천받기", use_container_width=True):
         preference_info = "소믈리에 추천" if auto_recommend else f"바디:{body}, 당도:{sweet}, 산도:{acidity}, 타닌:{tannin}"
 
         prompt = f"""너는 20년 경력의 마스터 소믈리에야. 와인 초보자도 이해하기 쉬운 언어로 우리 매장 재고에서 3가지를 엄선해줘.
+        **[절대 규칙] 반드시 아래 [매장 재고 데이터]에 존재하는 와인 이름과 가격만 사용하여 답변해. 데이터에 없는 와인은 절대로 지어내지 마.**
 [매장 재고 데이터]
 {inventory_sample}
 
