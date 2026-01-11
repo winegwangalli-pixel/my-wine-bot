@@ -10,7 +10,7 @@ SHEET_ID = "AIzaSyDzAf_DzzOZ98q4_j0TQGZ24deRTMmJ19Y"
 # 사장님 계정에서 확인된 최신 모델명을 사용합니다.
 MODEL_NAME = "gemini-3-flash-preview"
 genai.configure(api_key=GOOGLE_API_KEY)
-SHEET_URL = f"https://docs.google.com/spreadsheets/d/{SHEET_ID}/export?format=csv"
+SHEET_URL = f"https://docs.google.com/spreadsheets/d/{SHEET_ID}/gviz/tq?tqx=out:csv"
 
 st.set_page_config(page_title="광안리 와인곳간 AI 소믈리에", page_icon="🍷")
 st.title("🍷 AI 소믈리에 추천 서비스")
