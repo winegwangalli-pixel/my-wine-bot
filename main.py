@@ -29,17 +29,6 @@ model = genai.GenerativeModel("gemini-2.0-flash-exp")
 
 # --- 4. 메인 UI (필터부) ---
 st.set_page_config(page_title="와인곳간 AI 소믈리에", layout="centered")
-사장님, 모바일에서 가독성이 떨어졌던 이유는 배경색과 텍스트의 대비 때문일 수 있습니다.
-
-요청하신 대로 타이틀을 **깔끔하고 선명한 흰색(White)**으로 변경하고, 대신 글자가 묻히지 않도록 어두운 와인색 배경 박스를 살짝 입혔습니다. 이렇게 하면 어떤 화면에서도 타이틀이 아주 쨍하게 잘 보입니다.
-
-🛠️ 시인성을 높인 화이트 타이틀 적용 코드 (main.py)
-기존 타이틀 디자인 코드를 이 버전으로 덮어쓰기 해보세요.
-
-Python
-
-# --- 4. 메인 UI (화이트 타이틀 & 고대비 디자인) ---
-st.set_page_config(page_title="와인곳간 AI 소믈리에", layout="centered")
 
 # 타이틀 시인성 극대화 (어두운 배경에 흰색 글자)
 st.markdown("""
