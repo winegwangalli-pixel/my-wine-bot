@@ -30,49 +30,40 @@ model = genai.GenerativeModel("gemini-2.0-flash-exp")
 # --- 4. 메인 UI (필터부) ---
 st.set_page_config(page_title="와인곳간 AI 소믈리에", layout="centered")
 
-# 배경 없이 깔끔한 화이트 타이틀 디자인
+# 배경 없이 깔끔한 화이트 타이틀 디자인 (언더바 삭제 버전)
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@700;900&display=swap');
 
     .header-container {
         text-align: center;
-        padding: 30px 0px 10px 0px;
+        padding: 40px 0px 20px 0px;
     }
     .main-title {
         font-family: 'Noto Serif KR', serif !important;
-        font-size: 3.5rem !important;
+        font-size: 3.2rem !important; /* 모바일 고려 사이즈 소폭 조정 */
         font-weight: 900 !important;
-        color: #FFFFFF !important;    /* 화이트 글씨 */
-        text-shadow: 2px 2px 4px rgba(0,0,0,0.3); /* 글자 가독성을 위한 그림자 */
-        margin-bottom: 5px;
-        letter-spacing: -2px;
+        color: #FFFFFF !important;    
+        text-shadow: 2px 2px 5px rgba(0,0,0,0.4); /* 시인성 강화 */
+        margin-bottom: 8px;
+        letter-spacing: -1.5px;
     }
     .sub-title {
         font-family: 'Noto Serif KR', serif !important;
-        font-size: 1.2rem !important;
-        font-weight: 400 !important;
+        font-size: 1.4rem !important;
+        font-weight: 500 !important;
         color: #FFFFFF !important;
-        opacity: 0.8;
-        letter-spacing: 2px;
-        text-transform: uppercase;
-    }
-    .divider {
-        width: 40px;
-        height: 2px;
-        background-color: #FFFFFF;
-        margin: 15px auto;
-        opacity: 0.5;
+        opacity: 0.9;
+        letter-spacing: 1px;
     }
     </style>
     <div class='header-container'>
         <div class='main-title'>🍷 와인곳간</div>
-        <div class='divider'></div>
-        <div class='sub-title'>AI SOMMELIER SERVICE</div>
+        <div class='sub-title'>AI 소믈리에</div>
     </div>
     """, unsafe_allow_html=True)
 
-st.markdown("<br>", unsafe_allow_html=True) # 여백 추가
+st.markdown("<br>", unsafe_allow_html=True)
 
 st.subheader("💵 가격대 선택")
 price_option = st.selectbox(
