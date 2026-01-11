@@ -64,7 +64,6 @@ st.markdown("""
     """, unsafe_allow_html=True)
 
 st.markdown("<br>", unsafe_allow_html=True)
-
 st.subheader("💵 가격대 선택")
 price_option = st.selectbox(
     "가격대 선택창", # 이 부분은 화면에 보이지 않게 처리합니다.
