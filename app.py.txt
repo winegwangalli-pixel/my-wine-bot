@@ -1,0 +1,39 @@
+import streamlit as st
+import pandas as pd
+import google.generativeai as genai
+
+# 1. 설정 (여기에 사장님 정보를 넣으세요)
+GOOGLE_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/시트ID/export?format=csv"
+genai.configure(api_key="사장님의_API_KEY")
+
+# 2. 웹페이지 디자인
+st.set_page_config(page_title="우리매장 AI 소믈리에", page_icon="🍷")
+st.title("🍷 AI 소믈리에 추천")
+st.markdown("오늘의 기분이나 메뉴를 말씀하시면 와인을 추천해 드립니다.")
+
+# 3. 데이터 불러오기
+def get_data():
+    df = pd.read_csv(GOOGLE_SHEET_CSV_URL)
+    return df
+
+# 4. 질문 창
+query = st.text_input("질문을 입력하세요", placeholder="예: 3만원대 스테이크와 어울리는 레드와인?")
+
+if query:
+    with st.spinner('재고를 확인하며 추천 리스트를 뽑는 중입니다...'):
+        df = get_data()
+        inventory_str = df.to_string(index=False)
+        
+        # 제미나이에게 질문
+        model = genai.GenerativeModel("gemini-1.5-flash") # 혹은 gemini-3-flash-preview
+        prompt = f"너는 소믈리에야. 아래 재고를 보고 질문에 친절하게 답해줘.\n재고:\n{inventory_str}\n질문: {query}"
+        
+        response = model.generate_content(prompt)
+        
+        # 답변 출력 (예쁜 박스 형태)
+        st.success("✨ AI 소믈리에의 추천 결과")
+        st.write(response.text)
+
+# 하단 정보
+st.divider()
+st.caption("실시간 재고 현황을 바탕으로 안내해 드립니다.")
