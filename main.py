@@ -88,7 +88,7 @@ else:
     acidity = st.select_slider("🍋 산도", options=["낮음", "약간 낮음", "중간", "약간 높음", "매우 높음"], value="중간")
     tannin = st.select_slider("🪵 타닌", options=["거의 없음", "부드러움", "중간", "약간 강함", "강함"], value="중간")
 
-st.subheader("✍️ 더 구체적인 취향이 있으신가요?")
+st.subheader("✍️ 오늘의취향")
 query = st.text_input("💬 (예: 방어랑 먹을 와인, 오늘 조용히 혼술, 광안리 클램에서 버섯파스타랑 먹을와인, 와인을 잘모르는 친구에게 집들이 선물, 이탈리아 와인 도전해보고싶어 등)", placeholder="구체적으로 물어보면 더 좋아요😊")
 
 # --- 5. 스마트 추천 로직 ---
