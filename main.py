@@ -3,14 +3,14 @@ import pandas as pd
 import google.generativeai as genai
 
 # 1. 설정 정보 (기존 정보를 그대로 입력하세요)
-GOOGLE_API_KEY = "1-0-rK8a0_GEK4zXUcNmvkb0pnXIK4To2SnzW2rErglo"
-SHEET_ID = "AIzaSyDzAf_DzzOZ98q4_j0TQGZ24deRTMmJ19Y"
+GOOGLE_API_KEY = "AIzaSyDzAf_DzzOZ98q4_j0TQGZ24deRTMmJ19Y"
+SHEET_ID = "1-0-rK8a0_GEK4zXUcNmvkb0pnXIK4To2SnzW2rErglo"
 
 # 2. 모델 및 데이터 주소 설정
 # 사장님 계정에서 확인된 최신 모델명을 사용합니다.
 MODEL_NAME = "gemini-3-flash-preview"
 genai.configure(api_key=GOOGLE_API_KEY)
-SHEET_URL = f"https://docs.google.com/spreadsheets/d/AIzaSyDzAf_DzzOZ98q4_j0TQGZ24deRTMmJ19Y/gviz/tq?tqx=out:csv"
+SHEET_URL = f"https://docs.google.com/spreadsheets/d/1-0-rK8a0_GEK4zXUcNmvkb0pnXIK4To2SnzW2rErglo/gviz/tq?tqx=out:csv"
 
 st.set_page_config(page_title="광안리 와인곳간 AI 소믈리에", page_icon="🍷")
 st.title("🍷 AI 소믈리에 추천 서비스")
