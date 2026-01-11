@@ -29,7 +29,29 @@ model = genai.GenerativeModel("gemini-2.0-flash-exp")
 
 # --- 4. 메인 UI (필터부) ---
 st.set_page_config(page_title="와인곳간 AI 소믈리에", layout="centered")
-
+# 타이틀 시인성 강화 (글자 크기 UP, 색상 대비 UP)
+st.markdown("""
+    <style>
+    .main-title {
+        font-size: 3.2rem !important; /* 글자 크기 대폭 확대 */
+        font-weight: 900 !important;   /* 아주 두껍게 */
+        color: #800020 !important;    /* 진한 버건디 컬러 */
+        text-align: center;
+        margin-bottom: 0px;
+        line-height: 1.2;
+    }
+    .sub-title {
+        font-size: 1.5rem !important;
+        font-weight: 700 !important;
+        color: #333333 !important;
+        text-align: center;
+        margin-top: -10px;
+        margin-bottom: 20px;
+    }
+    </style>
+    <div class='main-title'>🍷 와인곳간</div>
+    <div class='sub-title'>AI 소믈리에</div>
+    """, unsafe_allow_html=True)
 
 st.subheader("📍 어떤 가격대를 찾으시나요?")
 price_option = st.selectbox(
