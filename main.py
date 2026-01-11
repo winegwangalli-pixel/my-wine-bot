@@ -2,73 +2,110 @@ import streamlit as st
 import google.generativeai as genai
 import pandas as pd
 
-# 1. 보안 설정: API 키를 금고(Secrets)에서 안전하게 가져옵니다.
+# 1. 보안 설정
 try:
     GOOGLE_API_KEY = st.secrets["GEMINI_API_KEY"]
     genai.configure(api_key=GOOGLE_API_KEY)
 except Exception as e:
-    st.error("API 키 설정에 문제가 있습니다. Streamlit Secrets 설정을 확인해주세요.")
+    st.error("API 키 설정에 문제가 있습니다. Streamlit Secrets를 확인해주세요.")
     st.stop()
 
-# 2. 구글 시트 데이터 로드
+# 2. 데이터 로드
 SHEET_ID = "1-0-rK8a0_GEK4zXUcNmvkb0pnXIK4To2SnzW2rErglo"
 SHEET_URL = f"https://docs.google.com/spreadsheets/d/{SHEET_ID}/gviz/tq?tqx=out:csv"
 
 @st.cache_data
 def load_data():
-    # 시트에서 상단 4개 열(상품명, 주종, 공급가, 재고)을 읽어옵니다.
     df = pd.read_csv(SHEET_URL)
     return df
 
 try:
     df = load_data()
 except Exception as e:
-    st.error(f"데이터를 불러오지 못했습니다. 구글 시트 공유 설정을 확인해주세요: {e}")
+    st.error(f"데이터 로드 실패: {e}")
     st.stop()
 
 # 3. 모델 설정
 model = genai.GenerativeModel("gemini-2.0-flash-exp")
 
-# 4. 앱 UI 구성
-st.title("🍷 와인곳간 AI 소믈리에 ")
-st.write("찾으시는 와인이나 어울리는 안주를 물어보세요! 구체적으로 물어보시면 더 좋아요:)")
+# --- 4. 사이드바: 5단계 정밀 취향 선택창 ---
+st.sidebar.header("🎯 소믈리에의 맞춤 필터")
 
-query = st.text_input("질문을 입력하세요 (예: 3만원대 삼겹살이랑 먹을 레드와인 추천해줘)", "")
+# 가격 카테고리
+price_option = st.sidebar.selectbox(
+    "💵 어느 정도 가격대를 생각하시나요?",
+    ["전체 가격대", "가성비 데일리 (3만원 이하)", "부담 없는 선물/모임 (3~7만원)", "특별한 날의 주인공 (7~15만원)", "프리미엄 콜렉션 (15만원 이상)"]
+)
 
-if query:
-    with st.spinner("재고를 확인하고 추천 리스트를 만들고 있습니다..."):
-        # 재고 데이터를 텍스트로 변환
-        inventory_str = df.to_string(index=False)
+st.sidebar.markdown("---")
+st.sidebar.subheader("👅 선호하는 맛 (5단계)")
+
+# 5단계 정밀 슬라이더 설정
+body = st.sidebar.select_slider(
+    "바디감 (무게감)", 
+    options=["매우 가벼움", "가벼움", "중간", "약간 무거움", "매우 진하고 무거움"]
+)
+
+sweet = st.sidebar.select_slider(
+    "당도 (달콤함)", 
+    options=["매우 드라이", "드라이", "중간", "약간 달콤함", "매우 달콤함"]
+)
+
+acidity = st.sidebar.select_slider(
+    "산도 (새콤함)", 
+    options=["낮음", "약간 낮음", "중간", "약간 높음", "매우 높음(생동감)"]
+)
+
+tannin = st.sidebar.select_slider(
+    "타닌 (떫은맛)", 
+    options=["거의 없음(매끄러움)", "부드러움", "중간", "약간 강함", "강함(단단함)"]
+)
+
+# --- 5. 메인 UI ---
+st.title("🍷 와인곳간 AI 수석 소믈리에")
+st.markdown("---")
+st.write("사장님의 세밀한 취향을 왼쪽에서 선택하시거나, 추가 요청사항을 아래에 적어주세요.")
+
+query = st.text_input("💬 추가 요청사항 (예: 오늘 연어 스테이크랑 먹을 거예요)", "")
+
+if st.button("전문 소믈리에의 추천 받기"):
+    with st.spinner("사장님의 정밀한 취향과 재고를 매칭 중입니다..."):
+        # 데이터 효율을 위해 상위 100개만 전달
+        inventory_sample = df.head(100).to_string(index=False)
         
-        # 사장님이 원하신 정돈된 답변 구성
-        prompt = f"""너는 20년 경력의 마스터 소믈리에이자, 와인과 음식의 조화를 연구하는 미식 전문가야. 아래 [매장 재고 데이터]를 바탕으로 질문에 답해줘.
-            
-[매장 재고 데이터]
-{inventory_str}
+        prompt = f"""너는 20년 경력의 마스터 소믈리에야. 아래 5단계 정밀 취향 조건을 바탕으로 우리 매장 재고에서 최적의 와인 3가지를 엄선해줘.
 
-[고객 질문]
-{query}
+[매장 재고 데이터]
+{inventory_sample}
+
+[고객의 정밀 선택 조건]
+- 가격대: {price_option}
+- 바디감: {body} (5단계 중 선택됨)
+- 당도: {sweet} (5단계 중 선택됨)
+- 산도: {acidity} (5단계 중 선택됨)
+- 타닌: {tannin} (5단계 중 선택됨)
+- 고객 추가 요청: {query}
 
 [답변 규칙]
-1. 답변 시작 시 고객의 질문 상황에 공감하는 문장을 한 줄 넣을 것.
-2. 반드시 재고가 있는 와인 중 가장 적합한 **Top 3**를 선정할 것.
-3. 각 와인마다 아래 4가지 항목을 반드시 포함할 것:
+1. 호텔 수석 소믈리에의 격식 있는 말투로 작성할 것.
+2. 각 와인의 '테이스팅 노트'를 색, 향, 질감, 여운으로 나누어 아주 상세히 기술할 것.
+3. 고객이 선택한 5단계 지표가 이 와인과 어떻게 완벽하게 일치하는지 전문적으로 설명할 것.
+4. 페어링 안주는 재료와 조리법까지 디테일하게 제안할 것.
 
-✨ **AI 소믈리에의 엄선 추천 Top 3**
+✨ **마스터 소믈리에의 정밀 매칭 추천 Top 3**
 
 1️⃣ **와인명** (가격)
-- **✅ 추천 이유**: (질문에 이 와인이 왜 적합한지 설명)
-- **👅 맛 / 특징**: (당도, 산도, 바디감 등 핵심 맛 설명)
-- **👤 이런 분께 추천**: (추천 대상 타겟팅)
-- **🧀 추천 안주**: (구체적인 메뉴 제안)
+- **🍷 소믈리에의 테이스팅 노트**: (색상, 첫 향, 입안에서의 질감, 여운을 아주 상세히 기술)
+- **✅ 취향 매칭 포인트**: (고객이 설정한 {body}, {sweet} 등 5단계 지표와의 정밀한 일치성 설명)
+- **🍽️ 미식 페어링**: (추천 요리와 그 이유)
+- **💎 전문 서빙 팁**: (온도, 디캔팅 등)
 
-2️⃣ **와인명** (가격)
-- (위와 동일한 4가지 항목 적용)
+(2, 3번 와인 동일 반복)
 
-3️⃣ **와인명** (가격)
-- (위와 동일한 4가지 항목 적용)
+마지막에 "이 정교한 추천이 사장님의 미식 경험을 한층 높여드리길 바랍니다. 궁금하신 점은 언제든 직원을 불러주세요. 🍷"라고 마무리할 것."""
 
-마지막에 "매장에 진열된 실제 병의 라벨을 직접 확인해 보세요! 도움이 필요하시면 직원을 불러주세요 🍷"라고 마무리할 것."""
-
-        response = model.generate_content(prompt)
-        st.markdown(response.text)
+        try:
+            response = model.generate_content(prompt)
+            st.markdown(response.text)
+        except Exception as e:
+            st.error(f"응답 생성 중 오류가 발생했습니다: {e}")
