@@ -27,7 +27,7 @@ except Exception as e:
     st.stop()
 
 # 3. 모델 설정
-model = genai.GenerativeModel("gemini-1.5-flash")
+model = genai.GenerativeModel("gemini-2.0-flash-exp")
 
 # 4. 앱 UI 구성
 st.title("🍷 우리 매장 AI 소믈리에")
