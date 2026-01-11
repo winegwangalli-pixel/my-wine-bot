@@ -30,40 +30,51 @@ model = genai.GenerativeModel("gemini-2.0-flash-exp")
 # --- 4. 메인 UI (필터부) ---
 st.set_page_config(page_title="와인곳간 AI 소믈리에", layout="centered")
 
-# 타이틀 시인성 극대화 (어두운 배경에 흰색 글자)
+# 배경 없이 깔끔한 화이트 타이틀 디자인
 st.markdown("""
     <style>
-    .header-box {
-        background-color: #720e0e; /* 진한 버건디 배경 */
-        padding: 25px;
-        border-radius: 15px;       /* 모서리 둥글게 */
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@700;900&display=swap');
+
+    .header-container {
         text-align: center;
-        margin-bottom: 25px;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        padding: 30px 0px 10px 0px;
     }
     .main-title {
-        font-size: 2.8rem !important;
+        font-family: 'Noto Serif KR', serif !important;
+        font-size: 3.5rem !important;
         font-weight: 900 !important;
-        color: #FFFFFF !important;    /* 눈에 확 띄는 화이트 */
-        margin: 0;
-        line-height: 1.2;
-        letter-spacing: -1px;
+        color: #FFFFFF !important;    /* 화이트 글씨 */
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3); /* 글자 가독성을 위한 그림자 */
+        margin-bottom: 5px;
+        letter-spacing: -2px;
     }
     .sub-title {
-        font-size: 1.3rem !important;
+        font-family: 'Noto Serif KR', serif !important;
+        font-size: 1.2rem !important;
         font-weight: 400 !important;
-        color: #FFD700 !important;    /* 포인트 컬러 (골드) */
-        margin-top: 5px;
-        opacity: 0.9;
+        color: #FFFFFF !important;
+        opacity: 0.8;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+    }
+    .divider {
+        width: 40px;
+        height: 2px;
+        background-color: #FFFFFF;
+        margin: 15px auto;
+        opacity: 0.5;
     }
     </style>
-    <div class='header-box'>
+    <div class='header-container'>
         <div class='main-title'>🍷 와인곳간</div>
-        <div class='sub-title'>AI 수석 소믈리에</div>
+        <div class='divider'></div>
+        <div class='sub-title'>AI SOMMELIER SERVICE</div>
     </div>
     """, unsafe_allow_html=True)
 
-st.subheader("💵 가격대 선택해주세요")
+st.markdown("<br>", unsafe_allow_html=True) # 여백 추가
+
+st.subheader("💵 가격대 선택")
 price_option = st.selectbox(
     "가격대 선택창", # 이 부분은 화면에 보이지 않게 처리합니다.
     ["전체 가격대", "가볍게 즐기는 데일리 (3만원 이하)", "실패 없는 미식 모임 (3~7만원)", "특별한 순간(7~15만원)", "프리미엄 (15만원 이상)"],
