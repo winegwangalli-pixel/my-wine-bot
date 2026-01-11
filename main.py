@@ -10,82 +10,88 @@ except Exception as e:
     st.error("API 키 설정에 문제가 있습니다. Streamlit Secrets를 확인해주세요.")
     st.stop()
 
-# 2. 데이터 로드
+# 2. 데이터 로드 및 전처리
 SHEET_ID = "1-0-rK8a0_GEK4zXUcNmvkb0pnXIK4To2SnzW2rErglo"
 SHEET_URL = f"https://docs.google.com/spreadsheets/d/{SHEET_ID}/gviz/tq?tqx=out:csv"
 
 @st.cache_data
 def load_data():
     df = pd.read_csv(SHEET_URL)
+    # 데이터가 500개일 때 검색 효율을 위해 숫자로 변환 가능한 열은 변환 (예: 공급가)
+    if '공급가' in df.columns:
+        df['공급가'] = pd.to_numeric(df['공급가'], errors='coerce')
     return df
 
-try:
-    df = load_data()
-except Exception as e:
-    st.error(f"데이터 로드 실패: {e}")
-    st.stop()
+df = load_data()
 
 # 3. 모델 설정
 model = genai.GenerativeModel("gemini-2.0-flash-exp")
 
-# --- 4. 메인 UI 구성 (모바일 가시성 최적화) ---
+# --- 4. 메인 UI (필터부) ---
 st.set_page_config(page_title="와인곳간 AI 소믈리에", layout="centered")
-
 st.title("🍷 와인곳간 AI 수석 소믈리에")
-st.info("취향을 선택하시면 최적의 와인을 추천해 드립니다.")
 
-# [가격 선택] 메인 화면에 크게 배치
 st.subheader("1. 예산 범위를 골라주세요")
 price_option = st.selectbox(
     "💵 가격대 선택",
-    ["전체 가격대", "가성비 데일리 (3만원 이하)", "부담 없는 선물/모임 (3~7만원)", "특별한 날의 주인공 (7~15만원)", "프리미엄 콜렉션 (15만원 이상)"],
-    label_visibility="collapsed"
+    ["전체 가격대", "가성비 데일리 (3만원 이하)", "부담 없는 선물 (3~7만원)", "특별한 날 (7~15만원)", "프리미엄 (15만원 이상)"]
 )
 
-st.markdown("---")
-
-# [맛 선택] 메인 화면에 크게 배치
 st.subheader("2. 선호하는 맛을 알려주세요")
 auto_recommend = st.toggle("⭐ 상관없음 (소믈리에 베스트 추천)", value=False)
 
 if auto_recommend:
-    st.success("✨ 전문가가 검증한 가장 대중적인 와인들로 엄선해 드릴게요!")
-    body = sweet = acidity = tannin = "상관없음(베스트 추천)"
+    body = sweet = acidity = tannin = "상관없음"
 else:
-    # 모바일에서 보기 편하게 슬라이더 배치
-    body = st.select_slider("⚖️ 바디감 (무게감)", options=["매우 가벼움", "가벼움", "중간", "약간 무거움", "매우 진함"])
-    sweet = st.select_slider("🍭 당도 (달콤함)", options=["매우 드라이", "드라이", "중간", "약간 달콤", "매우 달콤"])
-    acidity = st.select_slider("🍋 산도 (새콤함)", options=["낮음", "약간 낮음", "중간", "약간 높음", "매우 높음"])
-    tannin = st.select_slider("🪵 타닌 (떫은맛)", options=["거의 없음", "부드러움", "중간", "약간 강함", "강함"])
+    body = st.select_slider("⚖️ 바디감", options=["매우 가벼움", "가벼움", "중간", "약간 무거움", "매우 진함"], value="중간")
+    sweet = st.select_slider("🍭 당도", options=["매우 드라이", "드라이", "중간", "약간 달콤", "매우 달콤"], value="중간")
+    acidity = st.select_slider("🍋 산도", options=["낮음", "약간 낮음", "중간", "약간 높음", "매우 높음"], value="중간")
+    tannin = st.select_slider("🪵 타닌", options=["거의 없음", "부드러움", "중간", "약간 강함", "강함"], value="중간")
 
-st.markdown("---")
+st.subheader("3. 더 구체적인 요청")
+query = st.text_input("💬 (예: 캠핑용, 육회랑 어울리는 와인 등)", placeholder="자유롭게 입력해주세요.")
 
-# [추가 질문]
-st.subheader("3. 더 구체적인 요청이 있으신가요?")
-query = st.text_input("💬 (예: 캠핑 가서 고기랑 먹을 와인)", placeholder="자유롭게 적어주세요.")
-
-# 추천 버튼을 크게 만듦
+# --- 5. 스마트 추천 로직 ---
 if st.button("🍷 나만의 와인 추천받기", use_container_width=True):
-    with st.spinner("사장님의 취향에 딱 맞는 와인을 찾고 있습니다..."):
-        inventory_sample = df.head(100).to_string(index=False)
-        preference_info = "대중적 인기 와인" if auto_recommend else f"바디:{body}, 당도:{sweet}, 산도:{acidity}, 타닌:{tannin}"
+    with st.spinner("500여 종의 와인 리스트에서 최적의 상품을 분석 중입니다..."):
+        
+        # [스마트 전략 1] 데이터 셔플링 (500개를 골고루 추천하기 위해)
+        shuffled_df = df.sample(frac=1).reset_index(drop=True)
+        
+        # [스마트 전략 2] 가격대 1차 필터링 (AI의 부하를 줄여 답변 품질 상승)
+        filtered_df = shuffled_df
+        if "3만원 이하" in price_option:
+            filtered_df = shuffled_df[shuffled_df['공급가'] <= 30000]
+        elif "3~7만원" in price_option:
+            filtered_df = shuffled_df[(shuffled_df['공급가'] > 30000) & (shuffled_df['공급가'] <= 70000)]
+        elif "7~15만원" in price_option:
+            filtered_df = shuffled_df[(shuffled_df['공급가'] > 70000) & (shuffled_df['공급가'] <= 150000)]
+        elif "15만원 이상" in price_option:
+            filtered_df = shuffled_df[shuffled_df['공급가'] > 150000]
 
-        prompt = f"""너는 20년 경력의 친절한 마스터 소믈리에야. 초보자도 이해하기 쉬운 언어로 우리 매장 재고에서 3가지를 추천해줘.
+        # 1차 필터링 후 최대 100개만 AI에게 전달 (ResourceExhausted 에러 방지)
+        inventory_sample = filtered_df.head(100).to_string(index=False)
+        
+        preference_info = "소믈리에 추천" if auto_recommend else f"바디:{body}, 당도:{sweet}, 산도:{acidity}, 타닌:{tannin}"
+
+        prompt = f"""너는 20년 경력의 마스터 소믈리에야. 와인 초보자도 이해하기 쉬운 언어로 우리 매장 재고에서 3가지를 엄선해줘.
 [매장 재고 데이터]
 {inventory_sample}
+
 [고객 조건] 가격대:{price_option}, 취향:{preference_info}, 요청:{query}
 
-✨ **마스터 소믈리에의 맞춤 추천 Top 3**
-1️⃣ **와인명** (가격)
-- **✅ 선정 이유**: (가장 먼저 설명)
-- **🍷 초보자용 맛 표현**: (쉬운 단어로 친절하게)
-- **👤 이런 분께 추천**: (상황이나 성향)
-- **🍽️ 함께하면 맛있는 음식**: (구체적 메뉴)
+[답변 규칙]
+1. 선정 이유를 맨 처음에 배치할 것.
+2. 테이스팅 노트는 초보자가 알기 쉽게 비유(포도잼, 레몬 사탕 등)를 쓸 것.
+3. '추천 고객' 항목을 넣어 상황에 맞는 추천을 할 것.
+4. 전문 서빙 팁은 제외할 것.
 
-마지막엔 "궁금하신 점은 직원을 불러주세요! 🍷"로 마무리해줘."""
+✨ **마스터 소믈리에의 맞춤 추천 Top 3**
+(이하 1, 2, 3번 와인 형식 유지)
+"""
 
         try:
             response = model.generate_content(prompt)
             st.markdown(response.text)
         except Exception as e:
-            st.error(f"오류가 발생했습니다: {e}")
+            st.error(f"죄송합니다. 잠시 후 다시 시도해주세요. (오류: {e})")
