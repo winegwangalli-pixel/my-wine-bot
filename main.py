@@ -28,75 +28,64 @@ except Exception as e:
 # 3. 모델 설정
 model = genai.GenerativeModel("gemini-2.0-flash-exp")
 
-# --- 4. 사이드바: 5단계 정밀 취향 선택창 ---
-st.sidebar.header("🎯 소믈리에의 맞춤 필터")
+# --- 4. 메인 UI 구성 (모바일 가시성 최적화) ---
+st.set_page_config(page_title="와인곳간 AI 소믈리에", layout="centered")
 
-price_option = st.sidebar.selectbox(
-    "💵 어느 정도 가격대를 생각하시나요?",
-    ["전체 가격대", "가성비 데일리 (3만원 이하)", "부담 없는 선물/모임 (3~7만원)", "특별한 날의 주인공 (7~15만원)", "프리미엄 콜렉션 (15만원 이상)"]
+st.title("🍷 와인곳간 AI 수석 소믈리에")
+st.info("사장님의 취향을 선택하시면 최적의 와인을 추천해 드립니다.")
+
+# [가격 선택] 메인 화면에 크게 배치
+st.subheader("1. 예산 범위를 골라주세요")
+price_option = st.selectbox(
+    "💵 가격대 선택",
+    ["전체 가격대", "가성비 데일리 (3만원 이하)", "부담 없는 선물/모임 (3~7만원)", "특별한 날의 주인공 (7~15만원)", "프리미엄 콜렉션 (15만원 이상)"],
+    label_visibility="collapsed"
 )
 
-st.sidebar.markdown("---")
-st.sidebar.subheader("👅 선호하는 맛")
+st.markdown("---")
 
-# '상관없음' 체크박스 추가
-auto_recommend = st.sidebar.checkbox("⭐ 상관없음 (소믈리에 베스트 추천)", value=False)
+# [맛 선택] 메인 화면에 크게 배치
+st.subheader("2. 선호하는 맛을 알려주세요")
+auto_recommend = st.toggle("⭐ 상관없음 (소믈리에 베스트 추천)", value=False)
 
 if auto_recommend:
-    st.sidebar.info("선택하신 가격대에서 가장 인기 있고 대중적인 와인을 추천해 드릴게요!")
-    # AI에게 보낼 값들을 '상관없음'으로 고정
+    st.success("✨ 전문가가 검증한 가장 대중적인 와인들로 엄선해 드릴게요!")
     body = sweet = acidity = tannin = "상관없음(베스트 추천)"
 else:
-    # 체크박스가 꺼져있을 때만 슬라이더 활성화
-    body = st.sidebar.select_slider("바디감 (무게감)", options=["매우 가벼움", "가벼움", "중간", "약간 무거움", "매우 진하고 무거움"], value="중간")
-    sweet = st.sidebar.select_slider("당도 (달콤함)", options=["매우 드라이", "드라이", "중간", "약간 달콤함", "매우 달콤함"], value="중간")
-    acidity = st.sidebar.select_slider("산도 (새콤함)", options=["낮음", "약간 낮음", "중간", "약간 높음", "매우 높음(생동감)"], value="중간")
-    tannin = st.sidebar.select_slider("타닌 (떫은맛)", options=["거의 없음", "부드러움", "중간", "약간 강함", "강함"], value="중간")
+    # 모바일에서 보기 편하게 슬라이더 배치
+    body = st.select_slider("⚖️ 바디감 (무게감)", options=["매우 가벼움", "가벼움", "중간", "약간 무거움", "매우 진함"])
+    sweet = st.select_slider("🍭 당도 (달콤함)", options=["매우 드라이", "드라이", "중간", "약간 달콤", "매우 달콤"])
+    acidity = st.select_slider("🍋 산도 (새콤함)", options=["낮음", "약간 낮음", "중간", "약간 높음", "매우 높음"])
+    tannin = st.select_slider("🪵 타닌 (떫은맛)", options=["거의 없음", "부드러움", "중간", "약간 강함", "강함"])
 
-# --- 5. 메인 UI ---
-st.title("🍷 와인곳간 AI 수석 소믈리에")
 st.markdown("---")
-st.write("사장님의 취향을 선택하시거나, 아래에 원하시는 느낌을 자유롭게 적어주세요.")
 
-query = st.text_input("💬 추가 요청사항 (예: 오늘 연어 스테이크랑 먹을 거예요)", "")
+# [추가 질문]
+st.subheader("3. 더 구체적인 요청이 있으신가요?")
+query = st.text_input("💬 (예: 캠핑 가서 고기랑 먹을 와인)", placeholder="자유롭게 적어주세요.")
 
-if st.button("전문 소믈리에의 추천 받기"):
+# 추천 버튼을 크게 만듦
+if st.button("🍷 나만의 와인 추천받기", use_container_width=True):
     with st.spinner("사장님의 취향에 딱 맞는 와인을 찾고 있습니다..."):
         inventory_sample = df.head(100).to_string(index=False)
-        
-        # '상관없음'일 경우의 프롬프트 지시사항 변경
-        preference_info = "고객이 특정 맛을 선택하지 않았으니, 매장에서 가장 대중적이고 만족도가 높은 와인을 추천해줘." if auto_recommend else f"바디감: {body} / 당도: {sweet} / 산도: {acidity} / 타닌: {tannin}"
+        preference_info = "대중적 인기 와인" if auto_recommend else f"바디:{body}, 당도:{sweet}, 산도:{acidity}, 타닌:{tannin}"
 
-        prompt = f"""너는 20년 경력의 친절한 마스터 소믈리에야. 와인 초보자도 이해하기 쉬운 언어로 우리 매장 재고에서 3가지를 추천해줘.
-
+        prompt = f"""너는 20년 경력의 친절한 마스터 소믈리에야. 초보자도 이해하기 쉬운 언어로 우리 매장 재고에서 3가지를 추천해줘.
 [매장 재고 데이터]
 {inventory_sample}
-
-[고객의 선택 조건]
-- 가격대: {price_option}
-- 맛 취향: {preference_info}
-- 고객 추가 요청: {query}
-
-[답변 작성 규칙]
-1. '추천 이유'를 가장 먼저 배치할 것. (상관없음 선택 시, 왜 이 와인이 대중적으로 인기 있는지 설명)
-2. '테이스팅 노트'는 와인 초보자도 바로 이해할 수 있는 쉬운 단어(포도잼, 레몬 사탕, 숲속 향 등)로 쓸 것.
-3. '추천 고객' 항목을 추가하여 어떤 상황이나 성향의 분께 어울리는지 적을 것.
-4. 어려운 전문 용어는 일상적인 표현으로 대체할 것.
+[고객 조건] 가격대:{price_option}, 취향:{preference_info}, 요청:{query}
 
 ✨ **마스터 소믈리에의 맞춤 추천 Top 3**
-
 1️⃣ **와인명** (가격)
-- **✅ 선정 이유**: (고객의 조건이나 '상관없음' 선택에 따라 이 와인이 왜 오늘의 베스트인지 설명)
-- **🍷 초보자도 알기 쉬운 맛 표현**: (과일, 디저트 등에 비유하여 입안에서 그려지는 맛을 친절하게 설명)
-- **👤 이런 분께 추천드려요**: (이런 취향이나 상황에 계신 분께 강력 추천)
-- **🍽️ 함께하면 맛있는 음식**: (함께 먹으면 맛이 배가 되는 안주 메뉴 추천)
+- **✅ 선정 이유**: (가장 먼저 설명)
+- **🍷 초보자용 맛 표현**: (쉬운 단어로 친절하게)
+- **👤 이런 분께 추천**: (상황이나 성향)
+- **🍽️ 함께하면 맛있는 음식**: (구체적 메뉴)
 
-(2, 3번 와인도 동일 형식)
-
-마지막에 "이 추천이 사장님의 소중한 시간을 더욱 행복하게 만들어주길 바랍니다. 궁금하신 점은 언제든 직원을 불러주세요! 🍷"라고 따뜻하게 마무리해줘."""
+마지막엔 "궁금하신 점은 직원을 불러주세요! 🍷"로 마무리해줘."""
 
         try:
             response = model.generate_content(prompt)
             st.markdown(response.text)
         except Exception as e:
-            st.error(f"응답 생성 중 오류가 발생했습니다: {e}")
+            st.error(f"오류가 발생했습니다: {e}")
