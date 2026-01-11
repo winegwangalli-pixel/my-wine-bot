@@ -29,19 +29,21 @@ model = genai.GenerativeModel("gemini-2.0-flash-exp")
 
 # --- 4. 메인 UI (필터부) ---
 st.set_page_config(page_title="와인곳간 AI 소믈리에", layout="centered")
-st.markdown("<h1 style='text-align: center;'>🍷 와인곳간<br>AI 소믈리에</h1>", unsafe_allow_html=True)
-st.info("취향을 선택하시면 최적의 와인을 추천해 드립니다.")
+# 타이틀 디자인 개선
+st.markdown("<h1 style='text-align: center; color: #720e0e;'>🍷 와인곳간<br><span style='font-size: 0.7em; color: #333;'>AI 소믈리에 테이스팅 룸</span></h1>", unsafe_allow_html=True)
+st.markdown("<p style='text-align: center; color: #666;'>당신의 오늘을 빛내줄 완벽한 한 병을 찾아드릴게요.</p>", unsafe_allow_html=True)
 
-st.subheader("1. 예산 범위를 골라주세요")
+st.subheader("📍 어떤 가격대를 찾으시나요?")
 price_option = st.selectbox(
     "💵 가격대 선택",
-    ["전체 가격대", "가성비 데일리 (3만원 이하)", "부담 없는 선물 (3~7만원)", "특별한 날 (7~15만원)", "프리미엄 (15만원 이상)"]
+    ["전체 가격대", "가볍게 즐기는 데일리 (3만원 이하)", "실패 없는 미식 모임 (3~7만원)", "특별한 날 (7~15만원)", "프리미엄 (15만원 이상)"]
 )
 
-st.subheader("2. 선호하는 맛을 알려주세요")
-auto_recommend = st.toggle("⭐ 상관없음 (소믈리에 베스트 추천)", value=False)
+st.subheader("👅 원하는 맛의 밸런스를 맞춰주세요")
+auto_recommend = st.toggle("⭐ 알아서 추천해주세요 (소믈리에 픽)", value=False)
 
 if auto_recommend:
+    st.info("💡 실패 없는 스테디셀러 위주로 큐레이팅을 시작합니다.")
     body = sweet = acidity = tannin = "상관없음"
 else:
     body = st.select_slider("⚖️ 바디감", options=["매우 가벼움", "가벼움", "중간", "약간 무거움", "매우 진함"], value="중간")
@@ -49,12 +51,12 @@ else:
     acidity = st.select_slider("🍋 산도", options=["낮음", "약간 낮음", "중간", "약간 높음", "매우 높음"], value="중간")
     tannin = st.select_slider("🪵 타닌", options=["거의 없음", "부드러움", "중간", "약간 강함", "강함"], value="중간")
 
-st.subheader("3. 더 구체적인 요청")
-query = st.text_input("💬 (예: 캠핑용, 육회랑 어울리는 와인 등)", placeholder="자유롭게 입력해주세요.")
+st.subheader("✍️ 더 구체적인 취향이 있으신가요?")
+query = st.text_input("💬 (예: 방어랑 먹을 와인, 오늘 조용히 혼술, 광안리 클램에서 버섯파스타랑 먹을와인, 와인을 잘모르는 친구에게 집들이 선물, 이탈리아 와인 도전해보고싶어 등)", placeholder="자유롭게 입력해주세요.")
 
 # --- 5. 스마트 추천 로직 ---
 if st.button("🍷 나만의 와인 추천받기", use_container_width=True):
-    with st.spinner("500여 종의 와인 리스트에서 최적의 상품을 분석 중입니다..."):
+    with st.spinner("500여 종의 와인 리스트에서 최고의 맛돌이 찾는중입니다..."):
         
         # [스마트 전략 1] 데이터 셔플링 (500개를 골고루 추천하기 위해)
         shuffled_df = df.sample(frac=1).reset_index(drop=True)
