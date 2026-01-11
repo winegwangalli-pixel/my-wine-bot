@@ -63,15 +63,13 @@ st.markdown("""
     </div>
     """, unsafe_allow_html=True)
 
-st.info("💡 아래에서 취향을 선택하시면 최적의 와인을 큐레이팅해 드립니다.")
-
-st.subheader("📍 어떤 가격대를 찾으시나요?")
+st.subheader("📍 가격대 선택해주세요")
 price_option = st.selectbox(
     "💵 가격대 선택",
     ["전체 가격대", "가볍게 즐기는 데일리 (3만원 이하)", "실패 없는 미식 모임 (3~7만원)", "특별한 날 (7~15만원)", "프리미엄 (15만원 이상)"]
 )
 
-st.subheader("👅 원하는 맛의 밸런스를 맞춰주세요")
+st.subheader("👅 원하는 맛")
 auto_recommend = st.toggle("⭐ 알아서 추천해주세요 (소믈리에 픽)", value=False)
 
 if auto_recommend:
