@@ -29,29 +29,52 @@ model = genai.GenerativeModel("gemini-2.0-flash-exp")
 
 # --- 4. 메인 UI (필터부) ---
 st.set_page_config(page_title="와인곳간 AI 소믈리에", layout="centered")
-# 타이틀 시인성 강화 (글자 크기 UP, 색상 대비 UP)
+사장님, 모바일에서 가독성이 떨어졌던 이유는 배경색과 텍스트의 대비 때문일 수 있습니다.
+
+요청하신 대로 타이틀을 **깔끔하고 선명한 흰색(White)**으로 변경하고, 대신 글자가 묻히지 않도록 어두운 와인색 배경 박스를 살짝 입혔습니다. 이렇게 하면 어떤 화면에서도 타이틀이 아주 쨍하게 잘 보입니다.
+
+🛠️ 시인성을 높인 화이트 타이틀 적용 코드 (main.py)
+기존 타이틀 디자인 코드를 이 버전으로 덮어쓰기 해보세요.
+
+Python
+
+# --- 4. 메인 UI (화이트 타이틀 & 고대비 디자인) ---
+st.set_page_config(page_title="와인곳간 AI 소믈리에", layout="centered")
+
+# 타이틀 시인성 극대화 (어두운 배경에 흰색 글자)
 st.markdown("""
     <style>
-    .main-title {
-        font-size: 3.2rem !important; /* 글자 크기 대폭 확대 */
-        font-weight: 900 !important;   /* 아주 두껍게 */
-        color: #800020 !important;    /* 진한 버건디 컬러 */
+    .header-box {
+        background-color: #720e0e; /* 진한 버건디 배경 */
+        padding: 25px;
+        border-radius: 15px;       /* 모서리 둥글게 */
         text-align: center;
-        margin-bottom: 0px;
+        margin-bottom: 25px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    .main-title {
+        font-size: 2.8rem !important;
+        font-weight: 900 !important;
+        color: #FFFFFF !important;    /* 눈에 확 띄는 화이트 */
+        margin: 0;
         line-height: 1.2;
+        letter-spacing: -1px;
     }
     .sub-title {
-        font-size: 1.5rem !important;
-        font-weight: 700 !important;
-        color: #333333 !important;
-        text-align: center;
-        margin-top: -10px;
-        margin-bottom: 20px;
+        font-size: 1.3rem !important;
+        font-weight: 400 !important;
+        color: #FFD700 !important;    /* 포인트 컬러 (골드) */
+        margin-top: 5px;
+        opacity: 0.9;
     }
     </style>
-    <div class='main-title'>🍷 와인곳간</div>
-    <div class='sub-title'>AI 소믈리에</div>
+    <div class='header-box'>
+        <div class='main-title'>🍷 와인곳간</div>
+        <div class='sub-title'>AI 수석 소믈리에</div>
+    </div>
     """, unsafe_allow_html=True)
+
+st.info("💡 아래에서 취향을 선택하시면 최적의 와인을 큐레이팅해 드립니다.")
 
 st.subheader("📍 어떤 가격대를 찾으시나요?")
 price_option = st.selectbox(
