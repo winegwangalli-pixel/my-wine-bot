@@ -30,40 +30,46 @@ model = genai.GenerativeModel("gemini-2.0-flash-exp")
 # --- 4. 메인 UI (필터부) ---
 st.set_page_config(page_title="와인곳간 AI 소믈리에", layout="centered")
 
-# 배경 없이 깔끔한 화이트 타이틀 디자인 (언더바 삭제 버전)
+# 폰트 변경 및 간격(Padding/Margin) 최소화 작업
 st.markdown("""
     <style>
-    @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@700;900&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700;800&display=swap');
 
     .header-container {
         text-align: center;
-        padding: 40px 0px 20px 0px;
+        padding: 20px 0px 0px 0px; /* 위쪽 여백 대폭 축소 */
     }
     .main-title {
-        font-family: 'Noto Serif KR', serif !important;
-        font-size: 3.2rem !important; /* 모바일 고려 사이즈 소폭 조정 */
-        font-weight: 900 !important;
+        font-family: 'Nanum Myeongjo', serif !important;
+        font-size: 3rem !important; /* 모바일 비례감 조정 */
+        font-weight: 800 !important;
         color: #FFFFFF !important;    
-        text-shadow: 2px 2px 5px rgba(0,0,0,0.4); /* 시인성 강화 */
-        margin-bottom: 8px;
-        letter-spacing: -1.5px;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        margin-bottom: 0px !important; /* 아래쪽 간격 제거 */
+        letter-spacing: -1px;
     }
     .sub-title {
-        font-family: 'Noto Serif KR', serif !important;
-        font-size: 1.4rem !important;
-        font-weight: 500 !important;
+        font-family: 'Nanum Myeongjo', serif !important;
+        font-size: 1.2rem !important;
+        font-weight: 400 !important;
         color: #FFFFFF !important;
-        opacity: 0.9;
-        letter-spacing: 1px;
+        opacity: 0.85;
+        margin-top: -5px !important; /* 타이틀과 더 밀착 */
+        margin-bottom: 10px !important; /* 하단 요소와의 간격 축소 */
+    }
+    /* Streamlit 기본 간격 강제 조정 */
+    .block-container {
+        padding-top: 2rem !important;
     }
     </style>
     <div class='header-container'>
         <div class='main-title'>🍷 와인곳간</div>
-        <div class='sub-title'>AI 소믈리에</div>
+        <div class='sub-title'>AI 수석 소믈리에</div>
     </div>
     """, unsafe_allow_html=True)
 
-st.markdown("<br>", unsafe_allow_html=True)
+# 타이틀과 가격 선택창 사이의 여백을 줄이기 위해 빈 공간 제거
+st.write("")
 st.subheader("💵 가격대 선택")
 price_option = st.selectbox(
     "가격대 선택창", # 이 부분은 화면에 보이지 않게 처리합니다.
