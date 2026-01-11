@@ -2,38 +2,54 @@ import streamlit as st
 import pandas as pd
 import google.generativeai as genai
 
-# 1. 설정 (여기에 사장님 정보를 넣으세요)
-GOOGLE_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/시트ID/export?format=csv"
-genai.configure(api_key="사장님의_API_KEY")
+# 1. API 키 설정 (따옴표 안에 넣으세요)
+GOOGLE_API_KEY = "AIzaSyC0Ldeu8mqgaFwKnSCDjwzHSxJrg50loQg"
+# 2. 구글 시트 CSV 주소 (시트 ID 부분을 사장님 것으로 바꾸세요)
+# 시트 상단 주소창에서 d/와 /edit 사이의 긴 문자열이 시트 ID입니다.
+SHEET_ID = "1-0-rK8a0_GEK4zXUcNmvkb0pnXIK4To2SnzW2rErglo/edit?gid=0#gid=0"
+SHEET_URL = f"https://docs.google.com/spreadsheets/d/{SHEET_ID}/export?format=csv"
 
-# 2. 웹페이지 디자인
-st.set_page_config(page_title="우리매장 AI 소믈리에", page_icon="🍷")
-st.title("🍷 AI 소믈리에 추천")
-st.markdown("오늘의 기분이나 메뉴를 말씀하시면 와인을 추천해 드립니다.")
+genai.configure(api_key=GOOGLE_API_KEY)
 
-# 3. 데이터 불러오기
-def get_data():
-    df = pd.read_csv(GOOGLE_SHEET_CSV_URL)
-    return df
+st.set_page_config(page_title="AI 소믈리에", page_icon="🍷")
 
-# 4. 질문 창
-query = st.text_input("질문을 입력하세요", placeholder="예: 3만원대 스테이크와 어울리는 레드와인?")
+# 디자인 꾸미기
+st.title("🍷 우리매장 AI 소믈리에")
+st.markdown("---")
+
+# 질문 입력창
+query = st.text_input("와인에 대해 궁금한 점을 물어보세요!", placeholder="예: 삼겹살이랑 어울리는 3만원대 와인 추천해줘")
 
 if query:
-    with st.spinner('재고를 확인하며 추천 리스트를 뽑는 중입니다...'):
-        df = get_data()
-        inventory_str = df.to_string(index=False)
-        
-        # 제미나이에게 질문
-        model = genai.GenerativeModel("gemini-1.5-flash") # 혹은 gemini-3-flash-preview
-        prompt = f"너는 소믈리에야. 아래 재고를 보고 질문에 친절하게 답해줘.\n재고:\n{inventory_str}\n질문: {query}"
-        
-        response = model.generate_content(prompt)
-        
-        # 답변 출력 (예쁜 박스 형태)
-        st.success("✨ AI 소믈리에의 추천 결과")
-        st.write(response.text)
+    with st.spinner('재고를 확인하고 있습니다...'):
+        try:
+            # 시트 데이터 읽기
+            df = pd.read_csv(SHEET_URL)
+            inventory = df.to_string(index=False)
+            
+            # AI 모델 설정 (확인하신 gemini-3-flash-preview 사용)
+            model = genai.GenerativeModel("gemini-1.5-flash") # gemini-3-flash-preview가 오류나면 이걸로 먼저 테스트
+            
+            prompt = f"""너는 와인 매장의 친절한 소믈리에야. 아래 [매장 재고 데이터]를 바탕으로 질문에 답해줘.
+            
+[매장 재고 데이터]
+{inventory}
 
-# 하단 정보
-st.divider()
+[고객 질문]
+{query}
+
+[답변 규칙]
+1. 재고가 있는 것만 추천할 것.
+2. 친절하고 전문적으로 3줄 내외로 답할 것."""
+
+            response = model.generate_content(prompt)
+            
+            # 답변 출력
+            st.success("✨ AI 소믈리에의 답변")
+            st.write(response.text)
+            
+        except Exception as e:
+            st.error(f"오류가 발생했습니다: {e}")
+
+st.markdown("---")
 st.caption("실시간 재고 현황을 바탕으로 안내해 드립니다.")
