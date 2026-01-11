@@ -3,7 +3,7 @@ import pandas as pd
 import google.generativeai as genai
 
 # 1. 설정 정보 (기존 정보를 그대로 입력하세요)
-GOOGLE_API_KEY = st.secrets["AIzaSyAPNPzhuB7RajC8njNU30nwVBITqHuBu70"]
+GOOGLE_API_KEY = st.secrets["AIzaSyCX9zN4txiEDaPrzx6zJKEGS_KdPEQ3sDA"]
 SHEET_ID = "1-0-rK8a0_GEK4zXUcNmvkb0pnXIK4To2SnzW2rErglo"
 
 # 2. 모델 및 데이터 주소 설정
