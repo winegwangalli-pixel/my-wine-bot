@@ -13,7 +13,7 @@ genai.configure(api_key=GOOGLE_API_KEY)
 SHEET_URL = f"https://docs.google.com/spreadsheets/d/1-0-rK8a0_GEK4zXUcNmvkb0pnXIK4To2SnzW2rErglo/gviz/tq?tqx=out:csv"
 
 st.set_page_config(page_title="광안리 와인곳간 AI 소믈리에", page_icon="🍷")
-st.title("🍷 AI 소믈리에 추천 서비스")
+st.title("🍷 와인곳간 AI 소믈리에 추천 서비스")
 st.markdown("---")
 
 query = st.text_input("와인에 대해 무엇이든 물어보세요!", placeholder="예: 5만원대 선물용 레드와인 추천해줘")
@@ -43,18 +43,18 @@ if query:
 ✨ **AI 소믈리에의 추천 Top 3**
 
 1️⃣ **와인명** (가격)
-- 🍷 **맛/특징**: 간단 명료한 설명
-- 🍴 **추천 마리아주**: 어울리는 음식
+- **1. 추천 이유**: 고객의 요청(맛, 음식, 상황 등)에 따른 선정 근거
+- **2. 맛 / 특징**: 바디감, 산도, 당도 등 구체적인 특징
 
 2️⃣ **와인명** (가격)
-- 🍷 **맛/특징**: 간단 명료한 설명
-- 🍴 **추천 마리아주**: 어울리는 음식
+- **1. 추천 이유**: 선정 근거
+- **2. 맛 / 특징**: 구체적인 특징
 
 3️⃣ **와인명** (가격)
-- 🍷 **맛/특징**: 간단 명료한 설명
-- 🍴 **추천 마리아주**: 어울리는 음식
+- **1. 추천 이유**: 선정 근거
+- **2. 맛 / 특징**: 구체적인 특징
 
-마지막에 "원하시는 와인이 있으시면 직원에게 말씀해 주세요!"라고 친절하게 마무리할 것."""
+마지막에 "원하시는 와인이 있으시면 직원에게 말씀해 주세요! 🍷"라고 친절하게 마무리할 것."""
 
             response = model.generate_content(prompt)
             
