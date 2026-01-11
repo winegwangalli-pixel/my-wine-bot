@@ -1,34 +1,47 @@
 import streamlit as st
-import pandas as pd
 import google.generativeai as genai
+import pandas as pd
 
-# 1. 설정 정보 (기존 정보를 그대로 입력하세요)
-GOOGLE_API_KEY = st.secrets["GEMINI_API_KEY"]
+# 1. 보안 설정: API 키를 금고(Secrets)에서 안전하게 가져옵니다.
+try:
+    GOOGLE_API_KEY = st.secrets["GEMINI_API_KEY"]
+    genai.configure(api_key=GOOGLE_API_KEY)
+except Exception as e:
+    st.error("API 키 설정에 문제가 있습니다. Streamlit Secrets 설정을 확인해주세요.")
+    st.stop()
+
+# 2. 구글 시트 데이터 로드
 SHEET_ID = "1-0-rK8a0_GEK4zXUcNmvkb0pnXIK4To2SnzW2rErglo"
+SHEET_URL = f"https://docs.google.com/spreadsheets/d/{SHEET_ID}/gviz/tq?tqx=out:csv"
 
-# 2. 모델 및 데이터 주소 설정
-# 사장님 계정에서 확인된 최신 모델명을 사용합니다.
-MODEL_NAME = "gemini-3-flash-preview"
-genai.configure(api_key=GOOGLE_API_KEY)
-SHEET_URL = f"https://docs.google.com/spreadsheets/d/1-0-rK8a0_GEK4zXUcNmvkb0pnXIK4To2SnzW2rErglo/gviz/tq?tqx=out:csv"
+@st.cache_data
+def load_data():
+    # 시트에서 상단 4개 열(상품명, 주종, 공급가, 재고)을 읽어옵니다.
+    df = pd.read_csv(SHEET_URL)
+    return df
 
-st.set_page_config(page_title="광안리 와인곳간 AI 소믈리에", page_icon="🍷")
-st.title("🍷 와인곳간 AI 소믈리에 ")
-st.markdown("---")
+try:
+    df = load_data()
+except Exception as e:
+    st.error(f"데이터를 불러오지 못했습니다. 구글 시트 공유 설정을 확인해주세요: {e}")
+    st.stop()
 
-query = st.text_input("와인에 대해 무엇이든 물어보세요! 자세히 물어봐주면 더 좋아요 :)", placeholder="예: 5만원대 선물용 레드와인 추천해줘")
+# 3. 모델 설정
+model = genai.GenerativeModel("gemini-1.5-flash")
+
+# 4. 앱 UI 구성
+st.title("🍷 우리 매장 AI 소믈리에")
+st.write("찾으시는 와인이나 어울리는 안주를 물어보세요!")
+
+query = st.text_input("질문을 입력하세요 (예: 3만원대 레드와인 추천해줘)", "")
 
 if query:
-    with st.spinner('재고를 분석하여 추천 리스트를 작성 중입니다...'):
-        try:
-            # 시트 읽기 (오류 방지를 위해 4번째 열까지만 읽음)
-            df = pd.read_csv(SHEET_URL, usecols=[0, 1, 2, 3], on_bad_lines='skip')
-            inventory_str = df.to_string(index=False)
-            
-            # 모델 호출
-            model = genai.GenerativeModel(MODEL_NAME)
-            
-            prompt = f"""너는 와인 매장의 전문 소믈리에야. 아래 [매장 재고 데이터]를 바탕으로 질문에 답해줘.
+    with st.spinner("재고를 확인하고 추천 리스트를 만들고 있습니다..."):
+        # 재고 데이터를 텍스트로 변환
+        inventory_str = df.to_string(index=False)
+        
+        # 사장님이 원하신 정돈된 답변 구성
+        prompt = f"""너는 와인 매장의 전문 소믈리에야. 아래 [매장 재고 데이터]를 바탕으로 질문에 답해줘.
             
 [매장 재고 데이터]
 {inventory_str}
@@ -44,10 +57,10 @@ if query:
 ✨ **AI 소믈리에의 엄선 추천 Top 3**
 
 1️⃣ **와인명** (가격)
-- **✅ 추천 이유**: (질문하신 상황에 이 와인이 왜 가장 적합한지 설명)
-- **👅 맛 / 특징**: (당도, 산도, 바디감 등 핵심적인 맛 설명)
-- **👤 이런 분께 추천**: (선물용, 와인 초보자, 묵직한 맛을 즐기는 분 등 타겟팅)
-- **🧀 추천 안주**: (시트에 적힌 음식 외에도 잘 어울릴법한 구체적인 메뉴 제안)
+- **✅ 추천 이유**: (질문에 이 와인이 왜 적합한지 설명)
+- **👅 맛 / 특징**: (당도, 산도, 바디감 등 핵심 맛 설명)
+- **👤 이런 분께 추천**: (추천 대상 타겟팅)
+- **🧀 추천 안주**: (구체적인 메뉴 제안)
 
 2️⃣ **와인명** (가격)
 - (위와 동일한 4가지 항목 적용)
@@ -55,16 +68,7 @@ if query:
 3️⃣ **와인명** (가격)
 - (위와 동일한 4가지 항목 적용)
 
-마지막에 "원하시는 와인이 있으시면 직원에게 말씀해 주세요! 🍷"라고 친절하게 마무리할 것."""
+마지막에 "매장에 진열된 실제 병의 라벨을 직접 확인해 보세요! 도움이 필요하시면 직원을 불러주세요 🍷"라고 마무리할 것."""
 
-            response = model.generate_content(prompt)
-            
-            st.success("✨ AI 소믈리에의 추천 결과")
-            st.write(response.text)
-            
-        except Exception as e:
-            # 오류 발생 시 구체적인 원인 출력
-            st.error(f"오류가 발생했습니다: {e}")
-
-st.markdown("---")
-st.caption("실시간 매장 재고 데이터를 기반으로 답변합니다.")
+        response = model.generate_content(prompt)
+        st.markdown(response.text)
