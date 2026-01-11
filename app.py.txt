@@ -7,7 +7,7 @@ GOOGLE_API_KEY = "AIzaSyC0Ldeu8mqgaFwKnSCDjwzHSxJrg50loQg"
 # 2. 구글 시트 CSV 주소 (시트 ID 부분을 사장님 것으로 바꾸세요)
 # 시트 상단 주소창에서 d/와 /edit 사이의 긴 문자열이 시트 ID입니다.
 SHEET_ID = "1-0-rK8a0_GEK4zXUcNmvkb0pnXIK4To2SnzW2rErglo/edit?gid=0#gid=0"
-SHEET_URL = f"https://docs.google.com/spreadsheets/d/{SHEET_ID}/export?format=csv"
+SHEET_URL = f"https://docs.google.com/spreadsheets/d/{1-0-rK8a0_GEK4zXUcNmvkb0pnXIK4To2SnzW2rErglo/edit?gid=0#gid=0}/export?format=csv"
 
 genai.configure(api_key=GOOGLE_API_KEY)
 
@@ -53,3 +53,4 @@ if query:
 
 st.markdown("---")
 st.caption("실시간 재고 현황을 바탕으로 안내해 드립니다.")
+
