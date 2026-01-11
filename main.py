@@ -17,9 +17,9 @@ SHEET_URL = f"https://docs.google.com/spreadsheets/d/{SHEET_ID}/gviz/tq?tqx=out:
 @st.cache_data
 def load_data():
     df = pd.read_csv(SHEET_URL)
-    # 데이터가 500개일 때 검색 효율을 위해 숫자로 변환 가능한 열은 변환 (예: 공급가)
+    # 데이터가 500개일 때 검색 효율을 위해 숫자로 변환 가능한 열은 변환 (예: 가격)
     if '공급가' in df.columns:
-        df['공급가'] = pd.to_numeric(df['공급가'], errors='coerce')
+        df['공급가'] = pd.to_numeric(df['가격'], errors='coerce')
     return df
 
 df = load_data()
