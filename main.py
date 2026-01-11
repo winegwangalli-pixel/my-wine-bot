@@ -29,7 +29,7 @@ model = genai.GenerativeModel("gemini-2.0-flash-exp")
 
 # --- 4. 메인 UI (필터부) ---
 st.set_page_config(page_title="와인곳간 AI 소믈리에", layout="centered")
-st.title("🍷 와인곳간\nAI 소믈리에")
+# st.markdown("# 🍷 와인곳간  \n# AI 소믈리에")
 st.info("취향을 선택하시면 최적의 와인을 추천해 드립니다.")
 
 st.subheader("1. 예산 범위를 골라주세요")
