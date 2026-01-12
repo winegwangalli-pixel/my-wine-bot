@@ -32,7 +32,7 @@ df = load_data()
 model = genai.GenerativeModel("gemini-2.0-flash-exp")
 
 # --- 4. 메인 UI (미니멀 블랙 디자인) ---
-st.set_page_config(page_title="와인곳간 AI 소믈리에", layout="centered")
+st.set_page_config(page_title="와인곳간 AI 소믈리에🍷", layout="centered")
 
 st.markdown("""
     <style>
