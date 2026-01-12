@@ -74,9 +74,9 @@ st.markdown("""
         <p style='font-size: 0.85rem; color: #FFFFFF; font-weight: 700; margin-bottom: 5px;'>💡 이렇게 물어보시면 좋아요</p>
         <div style='background-color: #FFFFFF; padding: 12px; border-radius: 8px;'>
             <p style='font-size: 0.8rem; color: #333333; line-height: 1.5; margin-bottom: 0px; font-weight: 500;'>
-            • 🐟 방어랑 먹을 와인 / 🌙 오늘 조용히 혼술용<br>
-            • 🍝 광안리 클램에서 라자냐랑 마실 와인 / 🎁 집들이 선물용<br>
-            • 🇮🇹 이탈리아 와인 도전 / 🍇 부드러운 레드
+            • 방어랑 먹을 와인 / 오늘 조용히 혼술용<br>
+            • 광안리 클램에서 라자냐랑 마실 와인 / 집들이 선물용<br>
+            • 이탈리아 와인 도전 / 부드러운 레드
             </p>
         </div>
     </div>
