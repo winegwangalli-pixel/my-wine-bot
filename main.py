@@ -68,11 +68,8 @@ else:
     st.info("💡 실패 없는 스테디셀러 위주로 큐레이팅을 시작합니다.")
     body = sweet = acidity = tannin = "상관없음"
 
-st.markdown("""
-    <p style='font-size: 1.2rem; font-weight: 700; color: #FFFFFF !important; margin-bottom: 8px; padding-left: 5px;'>
-        ✍️ 오늘의 취향
-    </p>
-    """, unsafe_allow_html=True)
+st.markdown("""✍️ 오늘의 취향
+   
 st.markdown("""
     <div style='padding: 0px 0px 10px 0px;'>
         <div style='background-color: #FFFFFF; padding: 12px; border-radius: 8px; margin-top: 5px;'>
