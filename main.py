@@ -31,46 +31,54 @@ df = load_data()
 # 3. 모델 설정
 model = genai.GenerativeModel("gemini-2.0-flash-exp")
 
-# --- 4. 메인 UI (프리미엄 컬러 테마) ---
+# --- 4. 메인 UI (미니멀 블랙 디자인) ---
 st.set_page_config(page_title="와인곳간 AI 소믈리에", layout="centered")
 
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700;800&display=swap');
     
+    /* 전체 배경을 깨끗한 화이트로 고정 (검은 글자가 잘 보이도록) */
+    .stApp {
+        background-color: #FFFFFF;
+    }
+
     .header-container { 
         text-align: center; 
-        padding: 30px 0px 15px 0px; 
-        background: rgba(255, 255, 255, 0.05); /* 은은한 배경 대조 */
-        border-radius: 15px;
+        padding: 40px 0px 20px 0px;
     }
     
     .main-title { 
         font-family: 'Nanum Myeongjo', serif !important; 
-        font-size: 3.2rem !important; 
+        font-size: 3rem !important; 
         font-weight: 800 !important; 
-        /* 깊은 와인 레드와 딥 오렌지 그라데이션 */
-        background: linear-gradient(to right, #FFD700, #FF4500); 
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        text-shadow: 2px 2px 10px rgba(0,0,0,0.2);
+        color: #000000 !important; /* 순수 검정 */
         margin-bottom: 5px !important; 
-        letter-spacing: -1.5px; 
+        letter-spacing: -1.5px;
+        line-height: 1.2;
     }
     
     .sub-title { 
         font-family: 'Nanum Myeongjo', serif !important; 
-        font-size: 1.3rem !important; 
-        font-weight: 700 !important; 
-        /* 부드러운 샴페인 골드 컬러 */
-        color: #F3E5AB !important; 
-        opacity: 0.9; 
-        letter-spacing: 2px;
+        font-size: 1.2rem !important; 
+        font-weight: 400 !important; 
+        color: #333333 !important; /* 진한 회색으로 세련미 추가 */
+        opacity: 0.8;
+        letter-spacing: 3px;
         margin-top: 0px !important; 
-        text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
     }
     
-    .block-container { padding-top: 2rem !important; }
+    /* 섹션 제목들도 검은색으로 통일 */
+    .section-title {
+        font-size: 1.2rem !important;
+        font-weight: 700 !important;
+        color: #000000 !important;
+        margin-top: 25px !important;
+        margin-bottom: 10px !important;
+        display: block;
+    }
+
+    .block-container { padding-top: 1rem !important; }
     </style>
     
     <div class='header-container'>
@@ -78,7 +86,6 @@ st.markdown("""
         <div class='sub-title'>AI 수석 소믈리에</div>
     </div>
     """, unsafe_allow_html=True)
-
 st.write("")
 st.subheader("💵 가격대 선택")
 price_option = st.selectbox(
