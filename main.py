@@ -31,19 +31,50 @@ df = load_data()
 # 3. 모델 설정
 model = genai.GenerativeModel("gemini-2.0-flash-exp")
 
-# --- 4. 메인 UI ---
+# --- 4. 메인 UI (프리미엄 컬러 테마) ---
 st.set_page_config(page_title="와인곳간 AI 소믈리에", layout="centered")
 
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700;800&display=swap');
-    .header-container { text-align: center; padding: 20px 0px 0px 0px; }
-    .main-title { font-family: 'Nanum Myeongjo', serif !important; font-size: 3rem !important; font-weight: 800 !important; color: #FFFFFF !important; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); margin-bottom: 0px !important; letter-spacing: -1px; }
-    .sub-title { font-family: 'Nanum Myeongjo', serif !important; font-size: 1.2rem !important; font-weight: 400 !important; color: #FFFFFF !important; opacity: 0.85; margin-top: -5px !important; margin-bottom: 10px !important; }
+    
+    .header-container { 
+        text-align: center; 
+        padding: 30px 0px 15px 0px; 
+        background: rgba(255, 255, 255, 0.05); /* 은은한 배경 대조 */
+        border-radius: 15px;
+    }
+    
+    .main-title { 
+        font-family: 'Nanum Myeongjo', serif !important; 
+        font-size: 3.2rem !important; 
+        font-weight: 800 !important; 
+        /* 깊은 와인 레드와 딥 오렌지 그라데이션 */
+        background: linear-gradient(to right, #FFD700, #FF4500); 
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-shadow: 2px 2px 10px rgba(0,0,0,0.2);
+        margin-bottom: 5px !important; 
+        letter-spacing: -1.5px; 
+    }
+    
+    .sub-title { 
+        font-family: 'Nanum Myeongjo', serif !important; 
+        font-size: 1.3rem !important; 
+        font-weight: 700 !important; 
+        /* 부드러운 샴페인 골드 컬러 */
+        color: #F3E5AB !important; 
+        opacity: 0.9; 
+        letter-spacing: 2px;
+        margin-top: 0px !important; 
+        text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+    }
+    
     .block-container { padding-top: 2rem !important; }
     </style>
+    
     <div class='header-container'>
-        <div class='main-title'>🍷 와인곳간 🍷</div>
+        <div class='main-title'>와인곳간</div>
         <div class='sub-title'>AI 수석 소믈리에</div>
     </div>
     """, unsafe_allow_html=True)
