@@ -83,7 +83,7 @@ st.markdown("""
     
     <div class='header-container'>
         <div class='main-title'>와인곳간</div>
-        <div class='sub-title'>AI 소믈리에</div>
+        <div class='sub-title'>AI 소믈리에🍷</div>
     </div>
     """, unsafe_allow_html=True)
 st.write("")
