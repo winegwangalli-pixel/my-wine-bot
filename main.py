@@ -112,7 +112,7 @@ st.markdown("""
         <p style='font-size: 0.8rem; color: #444444; line-height: 1.6; margin: 0px; font-weight: 500;'>
             예) 방어랑 먹을 와인 / 오늘 조용히 혼술용<br>
             • 광안리 클램에서 라자냐랑 마실 와인 / 집들이 선물용<br>
-            • 이탈리아 와인 도전 / 초보가자 먹을 부드러운 레드
+            • 이탈리아 와인 도전 / 초보자가 먹을 부드러운 레드
         </p>
     </div>
     """, unsafe_allow_html=True)
