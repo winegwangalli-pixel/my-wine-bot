@@ -70,18 +70,23 @@ else:
 
 st.subheader("✍️ 오늘의 취향")
 st.markdown("""
-    <div style='padding: 5px 0px 15px 0px;'>
-        <p style='font-size: 0.85rem; color: #FFFFFF; font-weight: 700; margin-bottom: 5px;'>💡 이렇게 물어보시면 좋아요</p>
+    <div style='padding: 5px 0px 10px 0px;'>
         <div style='background-color: #FFFFFF; padding: 12px; border-radius: 8px;'>
-            <p style='font-size: 0.8rem; color: #333333; line-height: 1.5; margin-bottom: 0px; font-weight: 500;'>
-            • 방어랑 먹을 와인 / 오늘 조용히 혼술용<br>
-            • 광안리 클램에서 라자냐랑 마실 와인 / 집들이 선물용<br>
-            • 이탈리아 와인 도전 / 부드러운 레드
+            <p style='font-size: 0.8rem; color: #333333; line-height: 1.6; margin-bottom: 0px; font-weight: 500;'>
+            예) 방어랑 먹을 와인 /  오늘 조용히 혼술용<br>
+            •  광안리 클램에서 라자냐랑 마실 와인 /  집들이 선물용<br>
+            •  이탈리아 와인 도전 /  부드러운 레드
             </p>
         </div>
     </div>
     """, unsafe_allow_html=True)
 
+# 입력창
+query = st.text_input(
+    "오늘의 취향 입력", 
+    placeholder="자세히 적어주시면 더 추천 잘해드려요 :)", 
+    label_visibility="collapsed"
+)
 # 입력창
 query = st.text_input(
     "오늘의 취향 입력", 
