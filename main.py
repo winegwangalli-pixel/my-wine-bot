@@ -68,10 +68,10 @@ else:
     st.info("💡 실패 없는 스테디셀러 위주로 큐레이팅을 시작합니다.")
     body = sweet = acidity = tannin = "상관없음"
 
-st.subheader("✍️ 오늘의 취향")
+st.markdown("<p style='font-size: 1.25rem; font-weight: 700; color: white; margin-bottom: -15px;'>✍️ 오늘의 취향</p>", unsafe_allow_html=True)
 st.markdown("""
-    <div style='padding: 5px 0px 10px 0px;'>
-        <div style='background-color: #FFFFFF; padding: 12px; border-radius: 8px;'>
+    <div style='padding: 0px 0px 10px 0px;'>
+        <div style='background-color: #FFFFFF; padding: 12px; border-radius: 8px; margin-top: 5px;'>
             <p style='font-size: 0.8rem; color: #333333; line-height: 1.6; margin-bottom: 0px; font-weight: 500;'>
             예) 방어랑 먹을 와인 /  오늘 조용히 혼술용<br>
             •  광안리 클램에서 라자냐랑 마실 와인 /  집들이 선물용<br>
