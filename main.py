@@ -87,12 +87,6 @@ query = st.text_input(
     placeholder="자세히 적어주시면 더 추천 잘해드려요 :)", 
     label_visibility="collapsed"
 )
-# 입력창
-query = st.text_input(
-    "오늘의 취향 입력", 
-    placeholder="자세히 적어주시면 더 추천 잘해드려요 :)", 
-    label_visibility="collapsed"
-)
 
 # --- 5. 스마트 추천 로직 ---
 if st.button("🍷 나만의 와인 추천받기", use_container_width=True):
