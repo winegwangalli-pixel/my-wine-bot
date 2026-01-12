@@ -49,14 +49,14 @@ st.markdown("""
     """, unsafe_allow_html=True)
 
 st.write("")
-st.markdown("<span class='section-title'>💵 가격대 선택</span>", unsafe_allow_html=True)
+st.subheader("💵 가격대 선택")
 price_option = st.selectbox(
     "가격대 선택창",
     ["전체 가격대", "가볍게 즐기는 데일리 (3만원 이하)", "실패 없는 미식 모임 (3~7만원)", "특별한 순간(7~15만원)", "프리미엄 (15만원 이상)"],
     label_visibility="collapsed"
 )
 
-st.markdown("<span class='section-title'>👅 원하는 맛</span>", unsafe_allow_html=True)
+st.subheader("👅 원하는 맛")
 auto_recommend = st.toggle("⭐ 알아서 추천해주세요 (소믈리에 픽)", value=False)
 
 if not auto_recommend:
