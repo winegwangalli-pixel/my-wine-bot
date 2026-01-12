@@ -69,21 +69,23 @@ else:
     body = sweet = acidity = tannin = "상관없음"
 
 st.subheader("✍️ 오늘의 취향")
-# 1. 예시 문구를 밖으로 빼서 잘 보이게 배치
 st.markdown("""
-    <div style='background-color: #FFFFFF; padding: 18px; border-radius: 12px; border: 1px solid #DDDDDD; margin-bottom: 15px; box-shadow: 0px 2px 4px rgba(0,0,0,0.05);'>
-        <p style='font-size: 1.05rem; color: #000000; font-weight: 800; margin-bottom: 8px;'>예시</p>
-        <p style='font-size: 0.95rem; color: #222222; line-height: 1.6; margin-bottom: 0px; font-weight: 500;'>
-    • 방어랑 먹을 와인 / 오늘 조용히 혼술용<br>
-    • 광안리 클램에서 라자냐랑 먹을 와인 / 집들이 선물와인<br>
-    • 이탈리아 와인 도전해보고 싶어 / 편하게 먹을 부드러운 레드
-    </p>
+    <div style='padding: 5px 0px 15px 0px;'>
+        <p style='font-size: 0.85rem; color: #FFFFFF; font-weight: 700; margin-bottom: 5px;'>💡 이렇게 물어보시면 좋아요</p>
+        <div style='background-color: #FFFFFF; padding: 12px; border-radius: 8px;'>
+            <p style='font-size: 0.8rem; color: #333333; line-height: 1.5; margin-bottom: 0px; font-weight: 500;'>
+            • 🐟 방어랑 먹을 와인 / 🌙 오늘 조용히 혼술용<br>
+            • 🍝 광안리 클램에서 라자냐랑 마실 와인 / 🎁 집들이 선물용<br>
+            • 🇮🇹 이탈리아 와인 도전 / 🍇 부드러운 레드
+            </p>
+        </div>
+    </div>
     """, unsafe_allow_html=True)
 
-# 2. 입력창 안에는 친절한 안내 문구 삽입
+# 입력창
 query = st.text_input(
     "오늘의 취향 입력", 
-    placeholder="내용을 자세히 적어주시면 더 정확한 추천이 가능해요 :)", 
+    placeholder="자세히 적어주시면 더 추천 잘해드려요 :)", 
     label_visibility="collapsed"
 )
 
