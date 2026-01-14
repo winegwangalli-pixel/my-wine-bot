@@ -82,7 +82,7 @@ st.markdown("""
     
     /* 입력창 내부 텍스트 색상 보정 */
     input {
-        color: #000000 !important; /* 입력하는 글자만 검은색 (흰 배경 입력창일 경우) */
+        color: #FFFFFF !important; /* 입력하는 글자만 검은색 (흰 배경 입력창일 경우) */
     }
 
     .block-container { padding-top: 1.5rem !important; }
