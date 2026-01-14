@@ -31,62 +31,68 @@ df = load_data()
 # 3. 모델 설정
 model = genai.GenerativeModel("gemini-2.0-flash-exp")
 
-# --- 4. 메인 UI (미니멀 블랙 디자인) ---
-st.set_page_config(page_title="와인곳간 AI 소믈리에🍷", layout="centered")
+# --- 4. 메인 UI (다크 프리미엄 + 제목 크기 통일 버전) ---
+st.set_page_config(page_title="와인곳간 AI 소믈리에", layout="centered")
 
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700;800&display=swap');
     
-    /* 전체 배경을 깨끗한 화이트로 고정 (검은 글자가 잘 보이도록) */
-    .stApp {
-        background-color: #FFFFFF;
+    /* 1. 배경을 깊이감 있는 검은색으로, 기본 글자를 흰색으로 고정 */
+    html, body, [data-testid="stAppViewContainer"], .stApp {
+        background-color: #0E1117 !important; /* 스트림릿 다크 기본 배경색 */
+        color: #FFFFFF !important;
     }
 
-    .header-container { 
-        text-align: center; 
-        padding: 40px 0px 20px 0px;
-    }
+    .header-container { text-align: center; padding: 30px 0px 10px 0px; }
     
     .main-title { 
         font-family: 'Nanum Myeongjo', serif !important; 
-        font-size: 3rem !important; 
+        font-size: 2.8rem !important; 
         font-weight: 800 !important; 
-        color: #000000 !important; /* 순수 검정 */
-        margin-bottom: 5px !important; 
-        letter-spacing: -1.5px;
-        line-height: 1.2;
+        color: #FFFFFF !important; 
+        margin-bottom: 5px !important;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.5) !important;
     }
     
     .sub-title { 
         font-family: 'Nanum Myeongjo', serif !important; 
-        font-size: 1.2rem !important; 
-        font-weight: 400 !important; 
-        color: #333333 !important; /* 진한 회색으로 세련미 추가 */
+        font-size: 1.1rem !important; 
+        color: #FFFFFF !important; 
         opacity: 0.8;
-        letter-spacing: 3px;
-        margin-top: 0px !important; 
-    }
-    
-    /* 섹션 제목들도 검은색으로 통일 */
-    .section-title {
-        font-size: 1.2rem !important;
-        font-weight: 700 !important;
-        color: #000000 !important;
-        margin-top: 25px !important;
-        margin-bottom: 10px !important;
-        display: block;
+        letter-spacing: 2px;
+        margin-bottom: 20px !important;
     }
 
-    .block-container { padding-top: 1rem !important; }
+    /* 2. 모든 섹션 제목 스타일 (1.4rem 흰색 굵게 통일) */
+    .unified-title {
+        font-family: 'Nanum Myeongjo', serif !important;
+        font-size: 1.4rem !important; 
+        font-weight: 800 !important;
+        color: #FFFFFF !important;
+        margin-top: 35px !important;
+        margin-bottom: 15px !important;
+        display: block;
+    }
+    
+    /* 3. 슬라이더 및 기타 요소 글자색 보정 */
+    .stMarkdown, p, span, label {
+        color: #FFFFFF !important;
+    }
+    
+    /* 입력창 내부 텍스트 색상 보정 */
+    input {
+        color: #000000 !important; /* 입력하는 글자만 검은색 (흰 배경 입력창일 경우) */
+    }
+
+    .block-container { padding-top: 1.5rem !important; }
     </style>
     
     <div class='header-container'>
-        <div class='main-title'>와인곳간</div>
-        <div class='sub-title'>AI 소믈리에🍷</div>
+        <div class='main-title'>🍷 와인곳간 🍷</div>
+        <div class='sub-title'>AI 수석 소믈리에</div>
     </div>
     """, unsafe_allow_html=True)
-st.write("")
 st.subheader("💵 가격대 선택")
 price_option = st.selectbox(
     "가격대 선택창",
