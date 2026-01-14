@@ -116,8 +116,8 @@ else:
 st.markdown("<div class='unified-title'>✍️ 오늘의 취향</div>", unsafe_allow_html=True)
 
 st.markdown("""
-    <div style='background-color: #FFFFFF; padding: 15px; border-radius: 10px; margin-top: -10px; margin-bottom: 12px; border: 1px solid #DDDDDD;'>
-        <p style='font-size: 0.85rem; color: #000000 !important; line-height: 1.7; margin: 0px; font-weight: 600;'>
+    <div style='background-color: #FFFFFF !important; padding: 15px; border-radius: 10px; margin-top: -10px; margin-bottom: 12px;'>
+        <p style='font-size: 0.85rem !important; color: #000000 !important; line-height: 1.7 !important; margin: 0px !important; font-weight: 600 !important;'>
             예) 방어랑 먹을 와인 / 오늘 조용히 혼술용<br>
             • 광안리 클램에서 라자냐랑 마실 와인 / 집들이 선물용<br>
             • 이탈리아 와인 도전 / 초보자가 먹을 부드러운 레드
