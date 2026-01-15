@@ -127,15 +127,20 @@ st.markdown("""
 
 st.markdown("""
     <style>
-    /* 입력창 내부 글자색을 무조건 검은색으로 강제 고정 */
-    input[type="text"] {
+    /* 입력창과 그 안의 모든 글자색을 검정으로 강제 */
+    div[data-testid="stTextInput"] input {
         color: #000000 !important;
-        background-color: #FFFFFF !important; /* 배경을 흰색으로 해서 검은 글자가 잘 보이게 함 */
+        -webkit-text-fill-color: #000000 !important;
+        background-color: #FFFFFF !important;
     }
-    
-    /* 입력창 안내문구(Placeholder) 색상 조정 */
-    input::placeholder {
+    /* 안내 문구색 */
+    div[data-testid="stTextInput"] input::placeholder {
         color: #888888 !important;
+        -webkit-text-fill-color: #888888 !important;
+    }
+    /* 입력창 배경 박스 */
+    div[data-testid="stTextInput"] > div > div {
+        background-color: #FFFFFF !important;
     }
     </style>
     """, unsafe_allow_html=True)
