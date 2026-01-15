@@ -125,6 +125,22 @@ st.markdown("""
     </div>
     """, unsafe_allow_html=True)
 
+st.markdown("""
+    <style>
+    /* 입력창 내부 글자색을 무조건 검은색으로 강제 고정 */
+    input[type="text"] {
+        color: #000000 !important;
+        background-color: #FFFFFF !important; /* 배경을 흰색으로 해서 검은 글자가 잘 보이게 함 */
+    }
+    
+    /* 입력창 안내문구(Placeholder) 색상 조정 */
+    input::placeholder {
+        color: #888888 !important;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
+# 3. 오늘의 취향 하단 입력창 부분
 query = st.text_input(
     "오늘의 취향 입력", 
     placeholder="자세히 적어주시면 더 추천 잘해드려요 :)", 
